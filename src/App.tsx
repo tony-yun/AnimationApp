@@ -1,12 +1,15 @@
-import {NavigationContainer} from '@react-navigation/native';
+import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import React from 'react';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Root from './navigation/Root';
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <Root />
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer theme={DefaultTheme}>
+        <Root />
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 };
 
