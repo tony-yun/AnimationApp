@@ -1,6 +1,6 @@
 import styled from '@emotion/native';
-import React from 'react';
-import {Animated} from 'react-native';
+import React, {useRef} from 'react';
+import {Animated, PanResponder, View} from 'react-native';
 
 const Wrapper = styled.View`
   flex: 1;
@@ -11,7 +11,7 @@ const Wrapper = styled.View`
   background-color: #00a8ff;
 `;
 
-const Card = styled.View`
+const Card = styled(Animated.createAnimatedComponent(View))`
   width: 300px;
   height: 300px;
 
@@ -30,14 +30,29 @@ const CommonText = styled.Text`
   color: black;
 `;
 
-const AnimatedCard = Animated.createAnimatedComponent(Card);
-
 const ScreenOne = () => {
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => onPressIn(),
+      onPanResponderRelease: () => onPressOut(),
+    }),
+  ).current;
+
+  const scale = useRef(new Animated.Value(1)).current;
+
+  const onPressIn = () =>
+    Animated.spring(scale, {toValue: 0.95, useNativeDriver: true}).start();
+  const onPressOut = Animated.spring(scale, {
+    toValue: 1,
+    useNativeDriver: true,
+  }).start;
+
   return (
     <Wrapper>
-      <AnimatedCard>
+      <Card {...panResponder.panHandlers} style={{transform: [{scale}]}}>
         <CommonText>1</CommonText>
-      </AnimatedCard>
+      </Card>
     </Wrapper>
   );
 };
